@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{if .post}}Edit Post{{else}}Create New Post{{end}} - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'facebook-blue': '#1877f2',
+                        'facebook-dark': '#166fe5'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Admin Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-6">
+                    <a href="/admin/dashboard" class="text-2xl font-bold text-facebook-blue">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
+                    </a>
+                    <span class="text-gray-400">|</span>
+                    <span class="text-gray-700">{{if .post}}Edit Post{{else}}Create New Post{{end}}</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/posts" class="text-gray-700 hover:text-facebook-blue transition-colors">
+                        <i class="fas fa-arrow-left mr-1"></i>Back to Posts
+                    </a>
+                    <a href="/admin/logout" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                {{if .post}}Edit Post{{else}}Create New Post{{end}}
+            </h1>
+            <p class="text-gray-600">{{if .post}}Update your post content and settings{{else}}Create engaging content for your feed{{end}}</p>
+        </div>
+
+        <form method="POST" action="{{.action}}" class="space-y-8" enctype="multipart/form-data">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                <!-- Post Title -->
+                <div class="mb-6">
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-heading mr-1"></i>Post Title *
+                    </label>
+                    <input type="text" id="title" name="title" required
+                        value="{{if .post}}{{.post.Title}}{{end}}"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-facebook-blue focus:border-transparent transition-all text-lg"
+                        placeholder="Enter an engaging post title">
+                    <p class="text-sm text-gray-500 mt-1">Make it catchy and descriptive for better engagement</p>
+                </div>
+
+                <!-- Post Content -->
+                <div class="mb-6">
+                    <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-align-left mr-1"></i>Post Content *
+                    </label>
+                    <textarea id="content" name="content" rows="8" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-facebook-blue focus:border-transparent transition-all resize-none"
+                        placeholder="Write your post content here...">{{if .post}}{{.post.Content}}{{end}}</textarea>
+                    <p class="text-sm text-gray-500 mt-1">Share your thoughts, news, or stories with your audience</p>
+                </div>
+
+                <!-- Featured Image Upload -->
+                <div class="mb-6">
+                    <label for="image_upload" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-image mr-1"></i>Featured Image
+                    </label>
+                    
+                    <!-- Current Image Display -->
+                    {{if .post}}{{if .post.ImageURL}}
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">Current Image:</p>
+                        <img src="{{.post.ImageURL}}" alt="Current image" class="max-w-xs rounded-lg shadow-sm">
+                        <input type="hidden" name="current_image" value="{{.post.ImageURL}}">
+                    </div>
+                    {{end}}{{end}}
+                    
+                    <!-- Image Upload Area -->
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-facebook-blue transition-colors" id="upload-area">
+                        <div id="upload-content">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                            <p class="text-gray-600 mb-2">Click to upload or drag and drop</p>
+                            <p class="text-sm text-gray-500 mb-4">PNG, JPG, JPEG up to 5MB</p>
+                            <input type="file" id="image_upload" name="image" accept="image/*" class="hidden">
+                            <button type="button" onclick="document.getElementById('image_upload').click()" 
+                                class="bg-facebook-blue text-white px-6 py-2 rounded-lg hover:bg-facebook-dark transition-colors">
+                                Choose File
+                            </button>
+                        </div>
+                        
+                        <!-- Preview Area -->
+                        <div id="image-preview" class="hidden">
+                            <img id="preview-img" src="" alt="Preview" class="max-w-full max-h-64 rounded-lg shadow-sm mx-auto">
+                            <div class="mt-4 flex justify-center space-x-4">
+                                <button type="button" onclick="removeImage()" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash mr-1"></i>Remove
+                                </button>
+                                <button type="button" onclick="document.getElementById('image_upload').click()" class="text-facebook-blue hover:text-facebook-dark">
+                                    <i class="fas fa-edit mr-1"></i>Change
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden field to store uploaded image URL -->
+                    <input type="hidden" id="image_url" name="image_url" value="{{if .post}}{{.post.ImageURL}}{{end}}">
+                    
+                    <p class="text-sm text-gray-500 mt-2">Upload a high-quality image to make your post more engaging. Images will be automatically resized and optimized.</p>
+                </div>
+
+                <!-- Author -->
+                <div class="mb-6">
+                    <label for="author" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user mr-1"></i>Author Name
+                    </label>
+                    <input type="text" id="author" name="author"
+                        value="{{if .post}}{{.post.Author}}{{else}}Admin{{end}}"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-facebook-blue focus:border-transparent transition-all"
+                        placeholder="Author name">
+                </div>
+
+                <!-- Publish Status -->
+                <div class="mb-6">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="is_published" name="is_published" 
+                            {{if .post}}{{if .post.IsPublished}}checked{{end}}{{else}}checked{{end}}
+                            class="w-4 h-4 text-facebook-blue bg-gray-100 border-gray-300 rounded focus:ring-facebook-blue focus:ring-2">
+                        <label for="is_published" class="ml-2 text-sm font-medium text-gray-700">
+                            <i class="fas fa-globe mr-1"></i>Publish immediately
+                        </label>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Uncheck to save as draft</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+                    <a href="/admin/posts" class="text-gray-600 hover:text-gray-800 transition-colors">
+                        <i class="fas fa-times mr-1"></i>Cancel
+                    </a>
+                    
+                    <div class="flex space-x-4">
+                        {{if .post}}
+                        <button type="button" onclick="previewPost()" 
+                            class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-eye mr-1"></i>Preview
+                        </button>
+                        {{end}}
+                        
+                        <button type="submit" 
+                            class="bg-facebook-blue text-white px-8 py-3 rounded-lg hover:bg-facebook-dark transition-colors font-medium">
+                            <i class="fas fa-save mr-2"></i>{{if .post}}Update Post{{else}}Create Post{{end}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- SEO Tips -->
+        <div class="mt-8 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6">
+            <h3 class="text-lg font-bold text-blue-800 mb-4">
+                <i class="fas fa-search mr-2"></i>SEO & Engagement Tips
+            </h3>
+            <ul class="space-y-2 text-blue-700">
+                <li><i class="fas fa-check mr-2"></i>Use descriptive titles with relevant keywords</li>
+                <li><i class="fas fa-check mr-2"></i>Write engaging content that encourages comments</li>
+                <li><i class="fas fa-check mr-2"></i>Include high-quality images to increase engagement</li>
+                <li><i class="fas fa-check mr-2"></i>Keep content original and valuable for readers</li>
+                <li><i class="fas fa-check mr-2"></i>Publish consistently to build audience</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Image upload handling
+        document.getElementById('image_upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                uploadImage(file);
+            }
+        });
+
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('upload-area');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('border-facebook-blue', 'bg-blue-50');
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('border-facebook-blue', 'bg-blue-50');
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('border-facebook-blue', 'bg-blue-50');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                uploadImage(files[0]);
+            }
+        });
+
+        function uploadImage(file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file.');
+                return;
+            }
+            
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB.');
+                return;
+            }
+            
+            // Show loading state
+            const uploadContent = document.getElementById('upload-content');
+            uploadContent.innerHTML = '<i class="fas fa-spinner fa-spin text-4xl text-facebook-blue mb-4"></i><p class="text-gray-600">Uploading...</p>';
+            
+            // Create FormData
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            // Upload image
+            fetch('/admin/upload-image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Set the image URL in hidden field
+                    document.getElementById('image_url').value = data.imageUrl;
+                    
+                    // Show preview
+                    showImagePreview(data.imageUrl);
+                } else {
+                    alert('Upload failed: ' + data.error);
+                    resetUploadArea();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Upload failed. Please try again.');
+                resetUploadArea();
+            });
+        }
+
+        function showImagePreview(imageUrl) {
+            const uploadContent = document.getElementById('upload-content');
+            const imagePreview = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            
+            previewImg.src = imageUrl;
+            uploadContent.classList.add('hidden');
+            imagePreview.classList.remove('hidden');
+        }
+
+        function removeImage() {
+            document.getElementById('image_url').value = '';
+            resetUploadArea();
+        }
+
+        function resetUploadArea() {
+            const uploadContent = document.getElementById('upload-content');
+            const imagePreview = document.getElementById('image-preview');
+            
+            uploadContent.innerHTML = `
+                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                <p class="text-gray-600 mb-2">Click to upload or drag and drop</p>
+                <p class="text-sm text-gray-500 mb-4">PNG, JPG, JPEG up to 5MB</p>
+                <button type="button" onclick="document.getElementById('image_upload').click()" 
+                    class="bg-facebook-blue text-white px-6 py-2 rounded-lg hover:bg-facebook-dark transition-colors">
+                    Choose File
+                </button>
+            `;
+            
+            uploadContent.classList.remove('hidden');
+            imagePreview.classList.add('hidden');
+            
+            // Reset file input
+            document.getElementById('image_upload').value = '';
+        }
+
+        function previewPost() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const imageUrl = document.getElementById('image_url').value;
+            
+            if (!title || !content) {
+                alert('Please fill in the title and content before previewing.');
+                return;
+            }
+            
+            // Simple preview - you can enhance this
+            const previewWindow = window.open('', 'preview', 'width=800,height=600');
+            previewWindow.document.write(
+                '<!DOCTYPE html>' +
+                '<html>' +
+                '<head>' +
+                '<title>Preview: ' + title + '</title>' +
+                '<scr' + 'ipt src="https://cdn.tailwindcss.com"></scr' + 'ipt>' +
+                '</head>' +
+                '<body class="bg-gray-50 p-8">' +
+                '<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">' +
+                '<h1 class="text-2xl font-bold mb-4">' + title + '</h1>' +
+                (imageUrl ? '<img src="' + imageUrl + '" alt="' + title + '" class="w-full rounded-lg mb-4">' : '') +
+                '<p class="text-gray-700 leading-relaxed">' + content + '</p>' +
+                '</div>' +
+                '</body>' +
+                '</html>'
+            );
+        }
+
+        // Auto-save draft functionality (optional)
+        let autoSaveInterval;
+        
+        function startAutoSave() {
+            autoSaveInterval = setInterval(() => {
+                // Implementation for auto-save draft
+                console.log('Auto-saving draft...');
+            }, 30000); // Save every 30 seconds
+        }
+        
+        // Start auto-save when user starts typing
+        document.getElementById('content').addEventListener('input', function() {
+            if (!autoSaveInterval) {
+                startAutoSave();
+            }
+        });
+    </script>
+</body>
+</html>

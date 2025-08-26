@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.title}}</title>
+    <meta name="description" content="2D Society - Stay updated with the latest news, stories, and content. Mobile-friendly social media style feed.">
+    <meta name="keywords" content="feeds, news, updates, social media, mobile friendly">
+    <meta name="author" content="2D Society">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{{.title}}">
+    <meta property="og:description" content="Stay updated with the latest feeds and stories">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:image" content="https://yourdomain.com/static/images/og-image.jpg">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{.title}}">
+    <meta name="twitter:description" content="Stay updated with the latest feeds and stories">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'facebook-blue': '#1877f2',
+                        'facebook-light': '#42a5f5',
+                        'facebook-dark': '#166fe5'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        .feed-card {
+            transition: all 0.3s ease;
+        }
+        .feed-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .like-btn {
+            transition: all 0.2s ease;
+        }
+        .like-btn:hover {
+            transform: scale(1.1);
+        }
+        .like-btn.liked {
+            color: #e91e63;
+        }
+    </style>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA-your-analytics-id"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA-your-analytics-id');
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold text-facebook-blue">
+                        <i class="fas fa-rss mr-2"></i>2D Society
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="/" class="text-gray-700 hover:text-facebook-blue transition-colors">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    <a href="/privacy-policy" class="text-gray-700 hover:text-facebook-blue transition-colors">
+                        Privacy
+                    </a>
+                    <a href="/terms-of-service" class="text-gray-700 hover:text-facebook-blue transition-colors">
+                        Terms
+                    </a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-facebook-blue">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-2 space-y-2">
+                <a href="/" class="block text-gray-700 hover:text-facebook-blue py-2">
+                    <i class="fas fa-home mr-2"></i>Home
+                </a>
+                <a href="/privacy-policy" class="block text-gray-700 hover:text-facebook-blue py-2">
+                    Privacy Policy
+                </a>
+                <a href="/terms-of-service" class="block text-gray-700 hover:text-facebook-blue py-2">
+                    Terms of Service
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Feeds</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Stay updated with our latest stories, news, and insights. Join our community of readers and never miss an update.</p>
+        </div>
+
+        <!-- AdSense Banner -->
+        <div class="mb-8">
+            <div class="bg-gray-200 h-24 flex items-center justify-center rounded-lg">
+                <span class="text-gray-500 text-sm">AdSense Banner (728x90)</span>
+                <!-- Replace with actual AdSense code -->
+                <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-your-adsense-id" crossorigin="anonymous"></script> -->
+            </div>
+        </div>
+
+        <!-- Feeds Container -->
+        <div class="space-y-6">
+            {{range .posts}}
+            <article class="feed-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <!-- Post Header -->
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-facebook-blue rounded-full flex items-center justify-center text-white font-semibold">
+                                {{if .Author}}{{index .Author 0}}{{else}}A{{end}}
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="font-semibold text-gray-900">{{if .Author}}{{.Author}}{{else}}Admin{{end}}</h3>
+                                <p class="text-sm text-gray-500">{{timeAgo .CreatedAt}}</p>
+                            </div>
+                        </div>
+                        <div class="text-gray-400">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Content -->
+                <div class="p-4">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-3">
+                        <a href="/post/{{.ID}}" class="hover:text-facebook-blue transition-colors">{{.Title}}</a>
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed mb-4">{{.Content}}</p>
+                </div>
+
+                <!-- Post Image -->
+                {{if .ImageURL}}
+                <div class="px-4 pb-4">
+                    <img src="{{.ImageURL}}" alt="{{.Title}}" class="w-full rounded-lg object-cover max-h-96">
+                </div>
+                {{end}}
+
+                <!-- Post Actions -->
+                <div class="px-4 py-3 border-t border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-6">
+                            <button class="like-btn flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors" onclick="likePost({{.ID}}, this)">
+                                <i class="far fa-heart"></i>
+                                <span class="like-count">{{.Likes}}</span>
+                            </button>
+                            <a href="/post/{{.ID}}" class="flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors">
+                                <i class="far fa-comment"></i>
+                                <span>{{.Comments}}</span>
+                            </a>
+                            <button class="flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors">
+                                <i class="far fa-share-square"></i>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            {{formatDate .CreatedAt}}
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {{end}}
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-8">
+            <button class="bg-facebook-blue text-white px-8 py-3 rounded-lg hover:bg-facebook-dark transition-colors font-medium">
+                <i class="fas fa-spinner mr-2"></i>Load More Posts
+            </button>
+        </div>
+
+        <!-- Side AdSense -->
+        <div class="mt-8">
+            <div class="bg-gray-200 h-32 flex items-center justify-center rounded-lg">
+                <span class="text-gray-500 text-sm">AdSense Rectangle (300x250)</span>
+                <!-- Replace with actual AdSense code -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">
+                        <i class="fas fa-rss mr-2"></i>2D Society
+                    </h3>
+                    <p class="text-gray-400">Your trusted source for the latest news, stories, and updates. Stay connected with our community.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="/privacy-policy" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service" class="hover:text-white transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors text-xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors text-xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 2D Society. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Like post function
+        function likePost(postId, button) {
+            fetch(`/api/like/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const likeCount = button.querySelector('.like-count');
+                const heartIcon = button.querySelector('i');
+                
+                likeCount.textContent = data.likes;
+                heartIcon.classList.toggle('far');
+                heartIcon.classList.toggle('fas');
+                button.classList.toggle('liked');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
