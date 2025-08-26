@@ -41,6 +41,37 @@
         }
     </script>
     
+    <!-- Typography styles for rich text content -->
+    <style>
+        .prose h1, .prose h2, .prose h3 { 
+            font-weight: 600; 
+            margin-top: 1.5em; 
+            margin-bottom: 0.5em; 
+        }
+        .prose h1 { font-size: 1.5em; }
+        .prose h2 { font-size: 1.3em; }
+        .prose h3 { font-size: 1.1em; }
+        .prose p { margin-bottom: 1em; }
+        .prose ul, .prose ol { 
+            margin: 1em 0; 
+            padding-left: 1.5em; 
+        }
+        .prose li { margin-bottom: 0.5em; }
+        .prose blockquote { 
+            border-left: 4px solid #1877f2; 
+            padding-left: 1em; 
+            margin: 1em 0; 
+            font-style: italic; 
+        }
+        .prose a { 
+            color: #1877f2; 
+            text-decoration: underline; 
+        }
+        .prose strong { font-weight: 600; }
+        .prose em { font-style: italic; }
+        .prose u { text-decoration: underline; }
+    </style>
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -162,7 +193,7 @@
                     <h2 class="text-xl font-semibold text-gray-900 mb-3">
                         <a href="/post/{{.ID}}" class="hover:text-facebook-blue transition-colors">{{.Title}}</a>
                     </h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">{{.Content}}</p>
+                    <div class="text-gray-700 leading-relaxed mb-4 prose prose-sm max-w-none">{{safeHTML .Content}}</div>
                 </div>
 
                 <!-- Post Image -->
