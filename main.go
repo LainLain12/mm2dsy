@@ -113,8 +113,8 @@ func main() {
 	r.GET("/privacy-policy", privacyPolicy)
 	r.GET("/terms-of-service", termsOfService)
 
-	log.Println("Server starting on :8080")
-	r.Run(":8080")
+	log.Println("Server starting on :2025")
+	r.Run(":2025")
 }
 
 func initDB() {
