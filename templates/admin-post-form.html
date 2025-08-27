@@ -22,6 +22,61 @@
     <!-- Quill.js Rich Text Editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <!-- Custom styles for Quill editor -->
+    <style>
+        .ql-editor {
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 250px;
+            padding: 12px 15px;
+            background-color: white;
+        }
+        .ql-toolbar {
+            border-bottom: 1px solid #d1d5db;
+            padding: 8px;
+            background-color: #f9fafb;
+        }
+        .ql-container {
+            border: none;
+            font-family: inherit;
+            background-color: white;
+        }
+        .ql-editor.ql-blank::before {
+            font-style: normal;
+            color: #9ca3af;
+            left: 15px;
+        }
+        .ql-editor:focus {
+            outline: none;
+        }
+        .ql-snow .ql-tooltip {
+            z-index: 1000;
+        }
+        .editor-wrapper {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        .editor-wrapper:focus-within {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.1);
+        }
+        /* Ensure visibility */
+        #quill-editor {
+            background-color: white !important;
+        }
+        .ql-toolbar .ql-stroke {
+            fill: none;
+            stroke: #444;
+        }
+        .ql-toolbar .ql-fill {
+            fill: #444;
+            stroke: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Admin Navigation -->
@@ -76,8 +131,8 @@
                     </label>
                     
                     <!-- Rich Text Editor Container -->
-                    <div class="border border-gray-300 rounded-lg overflow-hidden">
-                        <div id="editor-container" style="height: 300px;" class="bg-white">
+                    <div class="editor-wrapper bg-white">
+                        <div id="quill-editor" style="height: 300px; min-height: 300px;">
                             {{if .post}}{{.post.Content}}{{end}}
                         </div>
                     </div>
@@ -202,41 +257,69 @@
     </div>
 
     <script>
-        // Initialize Rich Text Editor (Quill.js)
-        var quill = new Quill('#editor-container', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'align': [] }],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['blockquote', 'code-block'],
-                    ['link'],
-                    ['clean']
-                ]
-            },
-            placeholder: 'Write your post content here...\n\nFeatures:\n• Bold, italic, underline text\n• Headers and formatting\n• Bullet points and numbered lists\n• Links and quotes\n• And much more!'
-        });
-
-        // Sync Quill content with hidden textarea
-        quill.on('text-change', function() {
-            document.getElementById('content').value = quill.root.innerHTML;
-        });
-
-        // Initialize content if editing existing post
+        // Wait for page to load completely
         document.addEventListener('DOMContentLoaded', function() {
-            const existingContent = document.getElementById('content').value;
-            if (existingContent) {
-                quill.root.innerHTML = existingContent;
+            console.log('DOM loaded, initializing Quill editor...');
+            
+            // Check if Quill is available
+            if (typeof Quill === 'undefined') {
+                console.error('Quill.js is not loaded!');
+                alert('Rich text editor failed to load. Please refresh the page.');
+                return;
             }
-        });
+            
+            // Initialize Rich Text Editor (Quill.js)
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['blockquote', 'code-block'],
+                        ['link'],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'Write your post content here...\n\nUse the toolbar to format your text with bold, italic, headers, lists, and more!'
+            });
 
-        // Form submission handler
-        document.querySelector('form').addEventListener('submit', function() {
-            // Ensure content is synced before submission
-            document.getElementById('content').value = quill.root.innerHTML;
+            console.log('Quill editor initialized successfully:', quill);
+
+            // Initialize content if editing existing post
+            const existingContent = document.getElementById('content').value;
+            if (existingContent && existingContent.trim() !== '') {
+                quill.root.innerHTML = existingContent;
+                console.log('Loaded existing content');
+            }
+
+            // Sync Quill content with hidden textarea
+            quill.on('text-change', function() {
+                document.getElementById('content').value = quill.root.innerHTML;
+            });
+
+            // Form submission handler
+            document.querySelector('form').addEventListener('submit', function() {
+                // Ensure content is synced before submission
+                document.getElementById('content').value = quill.root.innerHTML;
+                console.log('Form submitted with content:', quill.root.innerHTML);
+            });
+
+            // Focus the editor when clicking anywhere on it
+            document.getElementById('quill-editor').addEventListener('click', function() {
+                quill.focus();
+            });
+
+            // Make quill globally available for other functions
+            window.quill = quill;
+            
+            // Auto-focus the editor after a short delay
+            setTimeout(() => {
+                quill.focus();
+                console.log('Editor focused and ready for input');
+            }, 500);
         });
 
         // Image upload handling
@@ -354,10 +437,10 @@
 
         function previewPost() {
             const title = document.getElementById('title').value;
-            const content = quill.root.innerHTML; // Get rich text content from Quill
+            const content = window.quill ? window.quill.root.innerHTML : document.getElementById('content').value; // Get rich text content from Quill
             const imageUrl = document.getElementById('image_url').value;
             
-            if (!title || !content || content === '<p><br></p>') {
+            if (!title || !content || content === '<p><br></p>' || content.trim() === '') {
                 alert('Please fill in the title and content before previewing.');
                 return;
             }
@@ -394,7 +477,6 @@
                 '</body>' +
                 '</html>'
             );
-        }
         }
 
         // Auto-save draft functionality (optional)
