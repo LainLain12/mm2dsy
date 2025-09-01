@@ -29,13 +29,13 @@ type Post struct {
 	ID          uint      `gorm:"primary_key" json:"id"`
 	Title       string    `json:"title"`
 	Content     string    `json:"content"`
-	ImageURL    string    `json:"image_url"`
 	Author      string    `json:"author"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ImageURL    string    `json:"image_url"`
+	IsPublished bool      `json:"is_published"`
 	Likes       int       `json:"likes"`
 	Comments    int       `json:"comments"`
-	IsPublished bool      `json:"is_published"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type Admin struct {
@@ -87,6 +87,18 @@ func main() {
 		"safeHTML": func(s string) template.HTML {
 			return template.HTML(s)
 		},
+		"add": func(a, b int) int {
+			return a + b
+		},
+		"mod": func(a, b int) int {
+			return a % b
+		},
+		"gt": func(a, b int) bool {
+			return a > b
+		},
+		"eq": func(a, b int) bool {
+			return a == b
+		},
 	})
 
 	r.LoadHTMLGlob("templates/*")
@@ -95,26 +107,33 @@ func main() {
 	// Public routes
 	r.GET("/", homePage)
 	r.GET("/post/:id", postDetail)
-	r.POST("/api/like/:id", likePost)
-
-	// Admin routes
-	r.GET("/admin", adminLogin)
-	r.POST("/admin/login", processAdminLogin)
-	r.GET("/admin/dashboard", adminDashboard)
-	r.GET("/admin/posts", adminPosts)
-	r.GET("/admin/posts/new", newPost)
-	r.POST("/admin/posts", createPost)
-	r.GET("/admin/posts/edit/:id", editPost)
-	r.POST("/admin/posts/update/:id", updatePost)
-	r.POST("/admin/posts/delete/:id", deletePost)
-	r.POST("/admin/upload-image", uploadImage)
-	r.GET("/admin/logout", adminLogout)
-
-	// SEO and AdSense routes
-	r.GET("/sitemap.xml", sitemap)
-	r.GET("/robots.txt", robotsTxt)
 	r.GET("/privacy-policy", privacyPolicy)
 	r.GET("/terms-of-service", termsOfService)
+	r.GET("/robots.txt", robotsTxt)
+	r.GET("/sitemap.xml", sitemapXML)
+
+	// API routes
+	api := r.Group("/api")
+	{
+		api.POST("/like/:id", likePost)
+		api.POST("/upload", uploadImage)
+	}
+
+	// Admin routes
+	admin := r.Group("/admin")
+	admin.Use(adminAuth())
+	{
+		admin.GET("/", adminDashboard)
+		admin.GET("/login", adminLogin)
+		admin.POST("/login", adminLoginPost)
+		admin.GET("/logout", adminLogout)
+		admin.GET("/posts", adminPosts)
+		admin.GET("/posts/new", adminNewPost)
+		admin.POST("/posts", adminCreatePost)
+		admin.GET("/posts/:id/edit", adminEditPost)
+		admin.PUT("/posts/:id", adminUpdatePost)
+		admin.DELETE("/posts/:id", adminDeletePost)
+	}
 
 	log.Println("Server starting on :2025")
 	r.Run(":2025")
@@ -150,7 +169,7 @@ func homePage(c *gin.Context) {
 	db.Where("is_published = ?", true).Order("created_at desc").Find(&posts)
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "2D Society - Latest Updates",
+		"title": "Num Guru - Numerology & Spiritual Guidance",
 		"posts": posts,
 	})
 }
@@ -166,11 +185,61 @@ func postDetail(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "post-detail.html", gin.H{
-		"title": post.Title + " - 2D Society",
+		"title": post.Title + " - Num Guru",
 		"post":  post,
 	})
 }
 
+func privacyPolicy(c *gin.Context) {
+	c.HTML(http.StatusOK, "privacy-policy.html", gin.H{
+		"title": "Privacy Policy - Num Guru",
+	})
+}
+
+func termsOfService(c *gin.Context) {
+	c.HTML(http.StatusOK, "terms-of-service.html", gin.H{
+		"title": "Terms of Service - Num Guru",
+	})
+}
+
+func robotsTxt(c *gin.Context) {
+	c.Header("Content-Type", "text/plain")
+	c.String(http.StatusOK, `User-agent: *
+Allow: /
+
+Sitemap: https://numguru.org/sitemap.xml`)
+}
+
+func sitemapXML(c *gin.Context) {
+	var posts []Post
+	db.Where("is_published = ?", true).Find(&posts)
+
+	c.Header("Content-Type", "application/xml")
+	sitemap := `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://numguru.org/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>`
+
+	for _, post := range posts {
+		sitemap += `
+  <url>
+    <loc>https://numguru.org/post/` + strconv.Itoa(int(post.ID)) + `</loc>
+    <lastmod>` + post.UpdatedAt.Format("2006-01-02") + `</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`
+	}
+
+	sitemap += `
+</urlset>`
+
+	c.String(http.StatusOK, sitemap)
+}
+
+// API handlers
 func likePost(c *gin.Context) {
 	id := c.Param("id")
 	var post Post
@@ -182,26 +251,56 @@ func likePost(c *gin.Context) {
 	post.Likes++
 	db.Save(&post)
 
-	c.JSON(http.StatusOK, gin.H{
-		"likes": post.Likes,
-	})
+	c.JSON(http.StatusOK, gin.H{"likes": post.Likes})
+}
+
+// Admin middleware
+func adminAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if c.Request.URL.Path == "/admin/login" {
+			c.Next()
+			return
+		}
+
+		session, _ := c.Cookie("admin_session")
+		if session != "authenticated" {
+			c.Redirect(http.StatusFound, "/admin/login")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
 }
 
 // Admin handlers
-func adminLogin(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin-login.html", gin.H{
-		"title": "Admin Login",
+func adminDashboard(c *gin.Context) {
+	var postCount int
+	var publishedCount int
+
+	db.Model(&Post{}).Count(&postCount)
+	db.Model(&Post{}).Where("is_published = ?", true).Count(&publishedCount)
+
+	c.HTML(http.StatusOK, "admin-dashboard.html", gin.H{
+		"title":          "Admin Dashboard - Num Guru",
+		"postCount":      postCount,
+		"publishedCount": publishedCount,
 	})
 }
 
-func processAdminLogin(c *gin.Context) {
+func adminLogin(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin-login.html", gin.H{
+		"title": "Admin Login - Num Guru",
+	})
+}
+
+func adminLoginPost(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 
 	var admin Admin
 	if db.Where("username = ?", username).First(&admin).RecordNotFound() {
 		c.HTML(http.StatusOK, "admin-login.html", gin.H{
-			"title": "Admin Login",
+			"title": "Admin Login - Num Guru",
 			"error": "Invalid credentials",
 		})
 		return
@@ -209,108 +308,69 @@ func processAdminLogin(c *gin.Context) {
 
 	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(password)); err != nil {
 		c.HTML(http.StatusOK, "admin-login.html", gin.H{
-			"title": "Admin Login",
+			"title": "Admin Login - Num Guru",
 			"error": "Invalid credentials",
 		})
 		return
 	}
 
-	// Set session (simplified)
-	c.SetCookie("admin_session", "authenticated", 3600, "/", "", false, true)
-	c.Redirect(http.StatusSeeOther, "/admin/dashboard")
+	c.SetCookie("admin_session", "authenticated", 3600*24, "/", "", false, true)
+	c.Redirect(http.StatusFound, "/admin/")
 }
 
-func adminDashboard(c *gin.Context) {
-	if !isAuthenticated(c) {
-		c.Redirect(http.StatusSeeOther, "/admin")
-		return
-	}
-
-	var postCount int
-	var publishedCount int
-	db.Model(&Post{}).Count(&postCount)
-	db.Model(&Post{}).Where("is_published = ?", true).Count(&publishedCount)
-
-	c.HTML(http.StatusOK, "admin-dashboard.html", gin.H{
-		"title":          "Admin Dashboard",
-		"postCount":      postCount,
-		"publishedCount": publishedCount,
-	})
+func adminLogout(c *gin.Context) {
+	c.SetCookie("admin_session", "", -1, "/", "", false, true)
+	c.Redirect(http.StatusFound, "/admin/login")
 }
 
 func adminPosts(c *gin.Context) {
-	if !isAuthenticated(c) {
-		c.Redirect(http.StatusSeeOther, "/admin")
-		return
-	}
-
 	var posts []Post
 	db.Order("created_at desc").Find(&posts)
 
 	c.HTML(http.StatusOK, "admin-posts.html", gin.H{
-		"title": "Manage Posts",
+		"title": "Manage Posts - Num Guru",
 		"posts": posts,
 	})
 }
 
-func newPost(c *gin.Context) {
-	if !isAuthenticated(c) {
-		c.Redirect(http.StatusSeeOther, "/admin")
-		return
-	}
-
+func adminNewPost(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin-post-form.html", gin.H{
-		"title":  "Create New Post",
-		"action": "/admin/posts",
+		"title": "New Post - Num Guru",
 	})
 }
 
-func createPost(c *gin.Context) {
-	if !isAuthenticated(c) {
-		c.Redirect(http.StatusSeeOther, "/admin")
-		return
-	}
-
+func adminCreatePost(c *gin.Context) {
 	post := Post{
 		Title:       c.PostForm("title"),
 		Content:     c.PostForm("content"),
-		ImageURL:    c.PostForm("image_url"),
 		Author:      c.PostForm("author"),
+		ImageURL:    c.PostForm("image_url"),
 		IsPublished: c.PostForm("is_published") == "on",
 	}
 
-	db.Create(&post)
-	c.Redirect(http.StatusSeeOther, "/admin/posts")
-}
-
-func editPost(c *gin.Context) {
-	if !isAuthenticated(c) {
-		c.Redirect(http.StatusSeeOther, "/admin")
+	if err := db.Create(&post).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	c.Redirect(http.StatusFound, "/admin/posts")
+}
+
+func adminEditPost(c *gin.Context) {
 	id := c.Param("id")
 	var post Post
 	if db.First(&post, id).RecordNotFound() {
-		c.HTML(http.StatusNotFound, "404.html", gin.H{
-			"title": "Post Not Found",
-		})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
 		return
 	}
 
 	c.HTML(http.StatusOK, "admin-post-form.html", gin.H{
-		"title":  "Edit Post",
-		"post":   post,
-		"action": "/admin/posts/update/" + id,
+		"title": "Edit Post - Num Guru",
+		"post":  post,
 	})
 }
 
-func updatePost(c *gin.Context) {
-	if !isAuthenticated(c) {
-		c.Redirect(http.StatusSeeOther, "/admin")
-		return
-	}
-
+func adminUpdatePost(c *gin.Context) {
 	id := c.Param("id")
 	var post Post
 	if db.First(&post, id).RecordNotFound() {
@@ -320,60 +380,26 @@ func updatePost(c *gin.Context) {
 
 	post.Title = c.PostForm("title")
 	post.Content = c.PostForm("content")
-	post.ImageURL = c.PostForm("image_url")
 	post.Author = c.PostForm("author")
+	post.ImageURL = c.PostForm("image_url")
 	post.IsPublished = c.PostForm("is_published") == "on"
 
-	db.Save(&post)
-	c.Redirect(http.StatusSeeOther, "/admin/posts")
-}
-
-func deletePost(c *gin.Context) {
-	if !isAuthenticated(c) {
-		c.Redirect(http.StatusSeeOther, "/admin")
+	if err := db.Save(&post).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	c.Redirect(http.StatusFound, "/admin/posts")
+}
+
+func adminDeletePost(c *gin.Context) {
 	id := c.Param("id")
-	db.Delete(&Post{}, id)
-	c.Redirect(http.StatusSeeOther, "/admin/posts")
-}
+	if err := db.Delete(&Post{}, id).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
-func adminLogout(c *gin.Context) {
-	c.SetCookie("admin_session", "", -1, "/", "", false, true)
-	c.Redirect(http.StatusSeeOther, "/admin")
-}
-
-// SEO handlers
-func sitemap(c *gin.Context) {
-	var posts []Post
-	db.Where("is_published = ?", true).Find(&posts)
-
-	c.Header("Content-Type", "application/xml")
-	c.HTML(http.StatusOK, "sitemap.xml", gin.H{
-		"posts": posts,
-	})
-}
-
-func robotsTxt(c *gin.Context) {
-	c.Header("Content-Type", "text/plain")
-	c.String(http.StatusOK, `User-agent: *
-Allow: /
-Disallow: /admin/
-
-Sitemap: https://yourdomain.com/sitemap.xml`)
-}
-
-func privacyPolicy(c *gin.Context) {
-	c.HTML(http.StatusOK, "privacy-policy.html", gin.H{
-		"title": "Privacy Policy - 2D Society",
-	})
-}
-
-func termsOfService(c *gin.Context) {
-	c.HTML(http.StatusOK, "terms-of-service.html", gin.H{
-		"title": "Terms of Service - 2D Society",
-	})
+	c.JSON(http.StatusOK, gin.H{"message": "Post deleted successfully"})
 }
 
 // Helper functions

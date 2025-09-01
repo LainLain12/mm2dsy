@@ -4,27 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.title}}</title>
-    <meta name="description" content="2D Society - Stay updated with the latest news, stories, and content. Mobile-friendly social media style feed.">
-    <meta name="keywords" content="feeds, news, updates, social media, mobile friendly">
-    <meta name="author" content="2D Society">
+    <meta name="description" content="Stay updated with numerology insights, spiritual guidance, and mystical knowledge. Join Num Guru's community of spiritual seekers.">
+    <meta name="keywords" content="numerology, astrology, spiritual, mystical, guidance, numbers">
     
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="{{.title}}">
-    <meta property="og:description" content="Stay updated with the latest feeds and stories">
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourdomain.com">
-    <meta property="og:image" content="https://yourdomain.com/static/images/og-image.jpg">
+    <meta property="og:url" content="https://numguru.org/">
+    <meta property="og:title" content="Num Guru - Numerology & Spiritual Guidance">
+    <meta property="og:description" content="Discover the power of numbers and spiritual insights with Num Guru.">
     
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{.title}}">
-    <meta name="twitter:description" content="Stay updated with the latest feeds and stories">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://numguru.org/">
+    <meta property="twitter:title" content="Num Guru - Numerology & Spiritual Guidance">
+    <meta property="twitter:description" content="Discover the power of numbers and spiritual insights with Num Guru.">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Custom Tailwind Config -->
     <script>
@@ -48,20 +47,23 @@
             margin-top: 1.5em; 
             margin-bottom: 0.5em; 
         }
-        .prose h1 { font-size: 1.5em; }
-        .prose h2 { font-size: 1.3em; }
+        .prose h1 { font-size: 1.4em; }
+        .prose h2 { font-size: 1.2em; }
         .prose h3 { font-size: 1.1em; }
-        .prose p { margin-bottom: 1em; }
+        .prose p { margin-bottom: 0.8em; }
         .prose ul, .prose ol { 
-            margin: 1em 0; 
-            padding-left: 1.5em; 
+            margin: 0.8em 0; 
+            padding-left: 1.2em; 
         }
-        .prose li { margin-bottom: 0.5em; }
+        .prose li { margin-bottom: 0.3em; }
         .prose blockquote { 
-            border-left: 4px solid #1877f2; 
-            padding-left: 1em; 
-            margin: 1em 0; 
+            border-left: 3px solid #1877f2; 
+            padding-left: 0.8em; 
+            margin: 0.8em 0; 
             font-style: italic; 
+            background-color: #f8fafc;
+            padding: 0.8em;
+            border-radius: 0.3em;
         }
         .prose a { 
             color: #1877f2; 
@@ -72,225 +74,371 @@
         .prose u { text-decoration: underline; }
     </style>
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
-    <style>
-        .feed-card {
-            transition: all 0.3s ease;
-        }
-        .feed-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        .like-btn {
-            transition: all 0.2s ease;
-        }
-        .like-btn:hover {
-            transform: scale(1.1);
-        }
-        .like-btn.liked {
-            color: #e91e63;
-        }
-    </style>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA-your-analytics-id"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA-your-analytics-id');
-    </script>
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX"
+         crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 font-sans">
     <!-- Navigation -->
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
+            <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <a href="/" class="text-2xl font-bold text-facebook-blue">
-                        <i class="fas fa-rss mr-2"></i>2D Society
+                        <i class="fas fa-infinity mr-2"></i>Num Guru
                     </a>
                 </div>
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="/" class="text-gray-700 hover:text-facebook-blue transition-colors">
-                        <i class="fas fa-home mr-1"></i>Home
-                    </a>
-                    <a href="/privacy-policy" class="text-gray-700 hover:text-facebook-blue transition-colors">
-                        Privacy
-                    </a>
-                    <a href="/terms-of-service" class="text-gray-700 hover:text-facebook-blue transition-colors">
-                        Terms
-                    </a>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="text-gray-700 hover:text-facebook-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            <i class="fas fa-home mr-1"></i>Home
+                        </a>
+                        <a href="/privacy-policy" class="text-gray-700 hover:text-facebook-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            <i class="fas fa-shield-alt mr-1"></i>Privacy
+                        </a>
+                        <a href="/terms-of-service" class="text-gray-700 hover:text-facebook-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            <i class="fas fa-file-contract mr-1"></i>Terms
+                        </a>
+                    </div>
                 </div>
-                <div class="md:hidden">
-                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-facebook-blue">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-            <div class="px-4 py-2 space-y-2">
-                <a href="/" class="block text-gray-700 hover:text-facebook-blue py-2">
-                    <i class="fas fa-home mr-2"></i>Home
-                </a>
-                <a href="/privacy-policy" class="block text-gray-700 hover:text-facebook-blue py-2">
-                    Privacy Policy
-                </a>
-                <a href="/terms-of-service" class="block text-gray-700 hover:text-facebook-blue py-2">
-                    Terms of Service
-                </a>
             </div>
         </div>
     </nav>
 
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-facebook-blue to-facebook-dark text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                Welcome to <span class="text-yellow-300">Num Guru</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                Discover the mystical power of numbers, unlock spiritual insights, and find guidance through numerology. Join our community of spiritual seekers and explore the wisdom of the universe.
+            </p>
+        </div>
+    </section>
+
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Feeds</h1>
-            <p class="text-gray-600 max-w-2xl mx-auto">Stay updated with our latest stories, news, and insights. Join our community of readers and never miss an update.</p>
-        </div>
-
-        <!-- AdSense Banner -->
-        <div class="mb-8">
-            <div class="bg-gray-200 h-24 flex items-center justify-center rounded-lg">
-                <span class="text-gray-500 text-sm">AdSense Banner (728x90)</span>
-                <!-- Replace with actual AdSense code -->
-                <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-your-adsense-id" crossorigin="anonymous"></script> -->
-            </div>
-        </div>
-
-        <!-- Feeds Container -->
-        <div class="space-y-6">
-            {{range .posts}}
-            <article class="feed-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <!-- Post Header -->
-                <div class="p-4 border-b border-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 bg-facebook-blue rounded-full flex items-center justify-center text-white font-semibold">
-                                {{if .Author}}{{index .Author 0}}{{else}}A{{end}}
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Posts Feed -->
+            <div class="lg:col-span-2">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                    <i class="fas fa-star mr-2 text-facebook-blue"></i>Latest Spiritual Updates
+                </h2>
+                
+                {{if .posts}}
+                    {{range $index, $post := .posts}}
+                    <!-- Post Article -->
+                    <article class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6 hover:shadow-md transition-shadow duration-300">
+                        <!-- Post Header -->
+                        <div class="p-6 border-b border-gray-100">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 bg-facebook-blue rounded-full flex items-center justify-center text-white font-semibold">
+                                    {{if $post.Author}}{{index $post.Author 0}}{{else}}A{{end}}
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="font-semibold text-gray-900">{{if $post.Author}}{{$post.Author}}{{else}}Admin{{end}}</h3>
+                                    <p class="text-gray-500 text-sm">{{$post.CreatedAt | timeAgo}}</p>
+                                </div>
                             </div>
-                            <div class="ml-3">
-                                <h3 class="font-semibold text-gray-900">{{if .Author}}{{.Author}}{{else}}Admin{{end}}</h3>
-                                <p class="text-sm text-gray-500">{{timeAgo .CreatedAt}}</p>
+                            <h2 class="text-xl font-bold text-gray-900 leading-tight hover:text-facebook-blue transition-colors">
+                                <a href="/post/{{$post.ID}}">{{$post.Title}}</a>
+                            </h2>
+                        </div>
+
+                        <!-- Post Image -->
+                        {{if $post.ImageURL}}
+                        <div class="px-6 pt-4">
+                            <img src="{{$post.ImageURL}}" alt="{{$post.Title}}" class="w-full rounded-lg object-cover max-h-80">
+                        </div>
+                        {{end}}
+
+                        <!-- Post Content Preview -->
+                        <div class="p-6">
+                            <div class="prose max-w-none text-gray-700 leading-relaxed">
+                                <div id="content-preview-{{$post.ID}}">
+                                    <!-- Show first 150 characters -->
+                                </div>
+                                <div id="content-full-{{$post.ID}}" class="hidden">
+                                    {{$post.Content | safeHTML}}
+                                </div>
+                            </div>
+                            <button id="see-more-btn-{{$post.ID}}" onclick="toggleContent({{$post.ID}})" 
+                                    class="text-facebook-blue hover:text-facebook-dark font-medium mt-2 inline-flex items-center">
+                                <span id="btn-text-{{$post.ID}}">See More</span>
+                                <i id="btn-icon-{{$post.ID}}" class="fas fa-chevron-down ml-1 text-sm"></i>
+                            </button>
+                        </div>
+
+                        <!-- Post Actions -->
+                        <div class="px-6 py-4 border-t border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-6">
+                                    <button class="like-btn flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors" onclick="likePost({{$post.ID}}, this)">
+                                        <i class="far fa-heart text-lg"></i>
+                                        <span class="like-count font-medium">{{$post.Likes}}</span>
+                                    </button>
+                                    <div class="flex items-center space-x-2 text-gray-600">
+                                        <i class="far fa-comment text-lg"></i>
+                                        <span class="font-medium">{{$post.Comments}}</span>
+                                    </div>
+                                    <button class="flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors" onclick="sharePost('{{$post.Title}}', '/post/{{$post.ID}}')">
+                                        <i class="far fa-share-square text-lg"></i>
+                                        <span class="font-medium">Share</span>
+                                    </button>
+                                </div>
+                                <a href="/post/{{$post.ID}}" class="text-facebook-blue hover:text-facebook-dark font-medium">
+                                    Read Full Post <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
                             </div>
                         </div>
-                        <div class="text-gray-400">
-                            <i class="fas fa-ellipsis-h"></i>
+                    </article>
+
+                    <!-- Initialize content preview for this post -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            initContentPreview({{$post.ID}}, `{{$post.Content | safeHTML}}`);
+                        });
+                    </script>
+
+                    <!-- Ad Between Posts (Show after every 2nd post) -->
+                    {{if and (gt (add $index 1) 2) (eq (mod (add $index 1) 3) 0)}}
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                        <div class="p-4 text-center">
+                            <p class="text-sm text-gray-500 mb-3">
+                                <i class="fas fa-ad mr-1"></i>Advertisement
+                            </p>
+                            <!-- AdSense In-Feed Ad Unit -->
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-format="fluid"
+                                 data-ad-layout-key="-fb+5w+4e-db+86"
+                                 data-ad-client="ca-pub-XXXXXXXXX"
+                                 data-ad-slot="XXXXXXXXX"></ins>
+                            <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                            
+                            <!-- Fallback placeholder if AdSense not ready -->
+                            <div class="bg-gray-100 h-64 flex items-center justify-center text-gray-500 rounded-lg mt-2">
+                                <div class="text-center">
+                                    <i class="fas fa-bullhorn text-2xl mb-2"></i>
+                                    <p>Advertisement Space</p>
+                                    <p class="text-xs">728x280 In-Feed Ad</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    {{end}}
 
-                <!-- Post Content -->
-                <div class="p-4">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-3">
-                        <a href="/post/{{.ID}}" class="hover:text-facebook-blue transition-colors">{{.Title}}</a>
-                    </h2>
-                    <div class="text-gray-700 leading-relaxed mb-4 prose prose-sm max-w-none">{{safeHTML .Content}}</div>
-                </div>
-
-                <!-- Post Image -->
-                {{if .ImageURL}}
-                <div class="px-4 pb-4">
-                    <img src="{{.ImageURL}}" alt="{{.Title}}" class="w-full rounded-lg object-cover max-h-96">
-                </div>
+                    {{end}}
+                {{else}}
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+                        <i class="fas fa-infinity text-6xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">No posts yet</h3>
+                        <p class="text-gray-500">Check back soon for the latest spiritual insights!</p>
+                    </div>
                 {{end}}
 
-                <!-- Post Actions -->
-                <div class="px-4 py-3 border-t border-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-6">
-                            <button class="like-btn flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors" onclick="likePost({{.ID}}, this)">
-                                <i class="far fa-heart"></i>
-                                <span class="like-count">{{.Likes}}</span>
-                            </button>
-                            <a href="/post/{{.ID}}" class="flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors">
-                                <i class="far fa-comment"></i>
-                                <span>{{.Comments}}</span>
-                            </a>
-                            <button class="flex items-center space-x-2 text-gray-600 hover:text-facebook-blue transition-colors">
-                                <i class="far fa-share-square"></i>
-                                <span>Share</span>
-                            </button>
-                        </div>
-                        <div class="text-sm text-gray-500">
-                            {{formatDate .CreatedAt}}
+                <!-- Bottom Feed Ad -->
+                {{if .posts}}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="p-4 text-center">
+                        <p class="text-sm text-gray-500 mb-3">
+                            <i class="fas fa-ad mr-1"></i>Advertisement
+                        </p>
+                        <!-- AdSense Large Rectangle Ad -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXX"
+                             data-ad-slot="XXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                        
+                        <!-- Fallback placeholder -->
+                        <div class="bg-gray-100 h-56 flex items-center justify-center text-gray-500 rounded-lg mt-2">
+                            <div class="text-center">
+                                <i class="fas fa-bullhorn text-2xl mb-2"></i>
+                                <p>Advertisement Space</p>
+                                <p class="text-xs">728x250 Bottom Feed Ad</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </article>
-            {{end}}
-        </div>
+                {{end}}
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- AdSense Sidebar Ad Unit -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-ad mr-2"></i>Advertisement
+                    </h3>
+                    <!-- AdSense Rectangle Ad -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXX"
+                         data-ad-slot="XXXXXXXXX"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                    
+                    <!-- Fallback placeholder -->
+                    <div class="bg-gray-100 h-64 flex items-center justify-center text-gray-500 rounded-lg">
+                        <div class="text-center">
+                            <i class="fas fa-bullhorn text-2xl mb-2"></i>
+                            <p>Ad Space</p>
+                            <p class="text-xs">300x250</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- About Widget -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-info-circle mr-2 text-facebook-blue"></i>About Num Guru
+                    </h3>
+                    <p class="text-gray-600 mb-4">
+                        Num Guru is your trusted guide to the mystical world of numerology and spiritual wisdom. Discover the hidden meanings behind numbers and unlock your spiritual potential.
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle mr-2 text-green-500"></i>
+                            Ancient wisdom & modern insights
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle mr-2 text-green-500"></i>
+                            Personalized numerology readings
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle mr-2 text-green-500"></i>
+                            Spiritual guidance & support
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Load More Button -->
-        <div class="text-center mt-8">
-            <button class="bg-facebook-blue text-white px-8 py-3 rounded-lg hover:bg-facebook-dark transition-colors font-medium">
-                <i class="fas fa-spinner mr-2"></i>Load More Posts
-            </button>
-        </div>
-
-        <!-- Side AdSense -->
-        <div class="mt-8">
-            <div class="bg-gray-200 h-32 flex items-center justify-center rounded-lg">
-                <span class="text-gray-500 text-sm">AdSense Rectangle (300x250)</span>
-                <!-- Replace with actual AdSense code -->
+                <!-- Additional Sidebar Ad -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-ad mr-2"></i>Sponsored
+                    </h3>
+                    <!-- AdSense Square Ad -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXX"
+                         data-ad-slot="XXXXXXXXX"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                    
+                    <!-- Fallback placeholder -->
+                    <div class="bg-gray-100 h-48 flex items-center justify-center text-gray-500 rounded-lg">
+                        <div class="text-center">
+                            <i class="fas fa-bullhorn text-2xl mb-2"></i>
+                            <p>Sponsored Content</p>
+                            <p class="text-xs">300x200</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">
-                        <i class="fas fa-rss mr-2"></i>2D Society
-                    </h3>
-                    <p class="text-gray-400">Your trusted source for the latest news, stories, and updates. Stay connected with our community.</p>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-infinity text-2xl mr-2 text-facebook-blue"></i>
+                        <span class="text-xl font-bold">Num Guru</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Your trusted guide to numerology and spiritual wisdom.
+                    </p>
                 </div>
+                
                 <div>
-                    <h4 class="font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
-                        <li><a href="/privacy-policy" class="hover:text-white transition-colors">Privacy Policy</a></li>
-                        <li><a href="/terms-of-service" class="hover:text-white transition-colors">Terms of Service</a></li>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="/privacy-policy" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
                     </ul>
                 </div>
+                
                 <div>
-                    <h4 class="font-semibold mb-4">Follow Us</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors text-xl">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors text-xl">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors text-xl">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <p class="text-gray-400 mb-2">
+                        <i class="fas fa-envelope mr-2"></i>
+                        contact@numguru.org
+                    </p>
+                    <p class="text-gray-400">
+                        <i class="fas fa-globe mr-2"></i>
+                        www.numguru.org
+                    </p>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 2D Society. All rights reserved.</p>
+            
+            <div class="border-t border-gray-800 pt-8 mt-8 text-center">
+                <p class="text-gray-400">
+                    © 2025 Num Guru. All rights reserved.
+                </p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- Scripts -->
     <script>
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
+        // Initialize content preview
+        function initContentPreview(postId, fullContent) {
+            const previewDiv = document.getElementById(`content-preview-${postId}`);
+            const fullDiv = document.getElementById(`content-full-${postId}`);
+            const btn = document.getElementById(`see-more-btn-${postId}`);
+            
+            // Strip HTML tags for preview
+            const textContent = fullContent.replace(/<[^>]*>/g, '');
+            const previewText = textContent.length > 150 ? textContent.substring(0, 150) + '...' : textContent;
+            
+            previewDiv.innerHTML = previewText;
+            
+            // Hide button if content is short
+            if (textContent.length <= 150) {
+                btn.style.display = 'none';
+            }
+        }
+
+        // Toggle content visibility
+        function toggleContent(postId) {
+            const previewDiv = document.getElementById(`content-preview-${postId}`);
+            const fullDiv = document.getElementById(`content-full-${postId}`);
+            const btnText = document.getElementById(`btn-text-${postId}`);
+            const btnIcon = document.getElementById(`btn-icon-${postId}`);
+            
+            if (fullDiv.classList.contains('hidden')) {
+                // Show full content
+                previewDiv.classList.add('hidden');
+                fullDiv.classList.remove('hidden');
+                btnText.textContent = 'See Less';
+                btnIcon.classList.remove('fa-chevron-down');
+                btnIcon.classList.add('fa-chevron-up');
+            } else {
+                // Show preview content
+                previewDiv.classList.remove('hidden');
+                fullDiv.classList.add('hidden');
+                btnText.textContent = 'See More';
+                btnIcon.classList.remove('fa-chevron-up');
+                btnIcon.classList.add('fa-chevron-down');
+            }
+        }
 
         // Like post function
         function likePost(postId, button) {
@@ -308,22 +456,29 @@
                 likeCount.textContent = data.likes;
                 heartIcon.classList.toggle('far');
                 heartIcon.classList.toggle('fas');
-                button.classList.toggle('liked');
+                button.classList.toggle('text-red-500');
             })
             .catch(error => {
                 console.error('Error:', error);
             });
         }
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+        // Share post function
+        function sharePost(title, url) {
+            const fullUrl = window.location.origin + url;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: fullUrl
                 });
-            });
-        });
+            } else {
+                // Fallback: copy URL to clipboard
+                navigator.clipboard.writeText(fullUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            }
+        }
     </script>
 </body>
 </html>
