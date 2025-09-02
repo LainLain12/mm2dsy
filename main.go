@@ -130,7 +130,11 @@ func main() {
 		admin.GET("/posts", adminPosts)
 		admin.GET("/posts/new", adminNewPost)
 		admin.POST("/posts", adminCreatePost)
-		admin.GET("/posts/:id/edit", adminEditPost)
+
+		// FIXED: Both route patterns for flexibility
+		admin.GET("/posts/:id/edit", adminEditPost) // Original pattern
+		admin.GET("/posts/edit/:id", adminEditPost) // Alternative pattern
+
 		admin.PUT("/posts/:id", adminUpdatePost)
 		admin.DELETE("/posts/:id", adminDeletePost)
 	}
@@ -360,7 +364,9 @@ func adminEditPost(c *gin.Context) {
 	id := c.Param("id")
 	var post Post
 	if db.First(&post, id).RecordNotFound() {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Post not found"})
+		c.HTML(http.StatusNotFound, "404.html", gin.H{
+			"title": "Post Not Found",
+		})
 		return
 	}
 
